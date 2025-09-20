@@ -27,15 +27,22 @@ The project was developed using uv. If you are a uv user, run `uv sync` instead 
 本项目基于 uv 开发。如果您是 uv 用户，请运行 `uv sync`，而非直接从 requirements.txt 安装。如果您不了解 uv，可以忽略此部分。
 
 
+## qBittorrent WebUI Support / qBittorrent WebUI 支持
+
+English:
+
+![qBittorrent WebUI Port](docs/webui-english.jpg)
+
+Chinese:
+
+![qBittorrent WebUI Port](docs/webui-chinese.jpg)
+
+
+
 ## Do cleaning / 进行清理
 
-1. Run `python main.py` (for uv users: `uv run main.py`. If you do not know what is uv, just ignore this.)
-
-
-2. The script will ask you these things: webui port, directory to clean, delete_probability. After showing the torrents to be cleaned, it will ask you whether to continue. Just carefully read what the python program output, and follow the instruction, you can finally do cleaning.
-
-
-
-TODO: uv china mainland tutorial
-
+1. Run `python main.py` (for uv users: `uv run main.py`. If you're unfamiliar with uv, simply ignore this.)
+    - 运行 `python main.py`（uv 用户请运行 `uv run main.py`。如果您不了解 uv，忽略此说明即可。）
+2. The python program will prompt you for the following information: webui port, directory to clean, and delete_probability. After displaying the list of torrents to be cleaned, it will ask if you want to continue. Just read the Python program's output carefully and follow the instructions to complete the cleaning process.
+    - 脚本会询问您以下信息：webui 端口、待清理目录、删除概率（delete_probability）。在显示待清理的种子列表后，脚本会询问是否继续。只需仔细阅读 Python 程序的输出内容并按照指示操作，即可完成清理。
 
