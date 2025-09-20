@@ -2,6 +2,7 @@ from pathlib import Path
 import random
 import time
 import requests
+import more_itertools
 
 
 def is_parent(parent, child):
@@ -13,7 +14,7 @@ def main():
 
     print("Firstly, we need to test qBittorrent connection")
     port = input(
-        "Please enter webui port (can be found at qBittorrent - Tools - Options - WebUI):\n"
+        "\nPlease enter webui port (can be found at qBittorrent - Tools - Options - WebUI):\n"
     )
     port = int(port)
 
@@ -38,25 +39,35 @@ def main():
     print(f"successfully get completed torrents: {len(torrents)}")
 
     # user select directory
-    dir_to_clean = input("Please enter directory to clean (e.g. D://Download):\n")
+    dir_to_clean = input("\nPlease enter directory to clean (e.g. D://Download):\n")
 
-    torrents = [p for p in torrents if is_parent(dir_to_clean, p['content_path'])]
+    torrents = [p for p in torrents if is_parent(dir_to_clean, p["content_path"])]
 
     print(f"Directory {dir_to_clean} torrents count: {len(torrents)}")
 
     # download complete time filter
-    complete_day_threshold_str = input("Please enter complete_day_threshold (unit: days) (default 30):\n")
+    complete_day_threshold_str = input(
+        "\nPlease enter complete_day_threshold (unit: days) (default 30):\n"
+    )
 
     complete_day_threshold = 30
     if complete_day_threshold_str:
         complete_day_threshold = int(complete_day_threshold_str)
 
-    torrents = [p for p in response.json() if p["completion_on"] < int(time.time()) - complete_day_threshold * 86400]
+    torrents = [
+        p
+        for p in response.json()
+        if p["completion_on"] < int(time.time()) - complete_day_threshold * 86400
+    ]
 
-    print(f"After filter {complete_day_threshold} days, torrents count: {len(torrents)}")
+    print(
+        f"After filter {complete_day_threshold} days, torrents count: {len(torrents)}"
+    )
 
     # randomly remove
-    delete_probability_str = input("Please enter delete_probability (0-1) (default 0.3):\n")
+    delete_probability_str = input(
+        "\nPlease enter delete_probability (0-1) (default 0.3):\n"
+    )
 
     delete_probability = 0.3
     if delete_probability_str:
@@ -70,27 +81,44 @@ def main():
     torrents = torrents[:delete_count]
 
     # list them from new to old
-    torrents.sort(key=lambda p: p['completion_on'], reverse=True)
+    torrents.sort(key=lambda p: p["completion_on"], reverse=True)
 
     print(f"Torrents selected for removal: {len(torrents)}.")
-    input("Type enter to show torrents and go to confirm step")
+    input("\nType enter to show selected torrents")
 
     for i, p in enumerate(torrents):
         print(f"{i+1}: {p['content_path']}")
 
-
     # confirm
-    confirm = input("Are you sure to remove these torrents? (type Y to confirm)\n")
-    if confirm != 'Y':
+    confirm = input("\nAre you sure to remove these torrents? (type Y to confirm)\n")
+    if confirm != "Y":
         print("Aborted.")
         return
 
     # remove
-    for i, p in enumerate(torrents):
-        ...
-    
+    batch_size = 10
+    batches = list(more_itertools.chunked(torrents, batch_size))
 
+    print(f"removing. batch_size={batch_size}, batches={len(batches)}")
 
+    for i, batch in enumerate(batches):
+        hashes = "|".join([p["hash"] for p in batch])
+        print(f"batch {i+1}/{len(batches)}, hashes: {hashes}")
+
+        response = requests.post(
+            f"{qb_url}/api/v2/torrents/delete",
+            data={
+                "hashes": hashes,
+                "deleteFiles": True,
+            },
+        )
+
+        if not response.ok:
+            raise Exception(
+                f"qBittorrent webui api delete torrents failed. response status: {response.status_code}, response text: {response.text}"
+            )
+
+    print("done")
 
 
 if __name__ == "__main__":
