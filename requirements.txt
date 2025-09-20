@@ -1,0 +1,3 @@
+ipykernel>=6.30.1
+more-itertools>=10.8.0
+requests>=2.32.5
