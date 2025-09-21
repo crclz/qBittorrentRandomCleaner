@@ -1,6 +1,6 @@
 # qBittorrent Random Cleaner / qBittorrent 随机清理
 
-## Random / 随机
+## Random Cleaning / 随机清理
 
 Why do we need random cleaning? Because randomness is simple enough—it only requires control via one parameter, delete_probability (with a value range of 0-1), which helps avoid the difficulty of making choices. Otherwise, when the disk is full, we would have to comprehensively decide which torrents to delete based on metrics like Ratio, Seeds, Peers, and Last Activity.
 
@@ -25,6 +25,8 @@ The project was developed using uv. If you are a uv user, run `uv sync` instead 
 3. 安装所需的 Python 包：`pip install -r requirements.txt`
 
 本项目基于 uv 开发。如果您是 uv 用户，请运行 `uv sync`，而非直接从 requirements.txt 安装。如果您不了解 uv，可以忽略此部分。
+
+附：[中国大陆地区用户如何使用uv](docs/china-mainland-uv.md)
 
 
 ## qBittorrent WebUI Support / qBittorrent WebUI 支持
