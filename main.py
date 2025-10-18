@@ -56,7 +56,7 @@ def main():
 
     torrents = [
         p
-        for p in response.json()
+        for p in torrents
         if p["completion_on"] < int(time.time()) - complete_day_threshold * 86400
     ]
 
